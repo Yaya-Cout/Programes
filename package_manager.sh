@@ -51,8 +51,7 @@ ask (){
     done
 }
 usesudo (){
-    usesudo
-$SUDO
+    ask "Use sudo ?" "Yes" "No"
     if [ "$REPLY" = "y"]
     then
         $SUDO="sudo "
