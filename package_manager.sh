@@ -132,51 +132,39 @@ remove (){
     else
         ask "Which remover ?" ${list[@]}
     fi
-    # Remove
-    if [ "$REPLY" = "d" ]
-	then
-	    sudo apt autoremove                        "$2"
-	fi
-    if [ "$REPLY" = "s" ]
-    then
-	    sudo snap remove                           "$2"
-	fi
-    if [ "$REPLY" = "p" ]
-    then
-	    usesudo
-        $SUDO pip3 uninstall "$2"
-    fi
-	if [ "$REPLY" = "n" ]
-    then
-	    sudo npm remove -g                         "$2"
-	fi
-    if [ "$REPLY" = "a" ]
-    then
-	    apm uninstall                              "$2"
-	fi
-    if [ "$REPLY" = "v" ]
-    then
-	    code --uninstall-extension                 "$2"
-	fi
-    if [ "$REPLY" = "y" ]
-    then
-	    usesudo
-        $SUDO yarn remove    "$2"
-	fi
-    if [ "$REPLY" = "r" ]
-    then
-	    sudo rpm -e                                "$2"
-	fi
-    if [ "$REPLY" = "r" ]
-    then
-	    usesudo
-        $SUDO flatpak remove "$2"
-	fi
-    if [ "$REPLY" = "y" ]
-    then
-	    usesudo
-        $SUDO yarn remove    "$2"
-	fi
+    # Uninstall
+    case $REPLY in
+        d)
+	        sudo apt autoremove "$2"
+        ;;
+        s)
+	        sudo snap remove "$2"
+        ;;
+        p)
+            usesudo
+            $SUDO pip3 uninstall "$2"
+        ;;
+        n)
+	        sudo npm remove -g "$2"
+        ;;
+        a)
+	        apm uninstall "$2"
+        ;;
+        v)
+        	code --uninstall-extension                 "$2"
+        ;;
+        y)
+	        usesudo
+            $SUDO yarn remove    "$2"
+        ;;
+        r)
+	        sudo rpm -e                                "$2"
+        ;;
+        f)
+	        usesudo
+            $SUDO flatpak remove "$2"
+        ;;
+    esac
 }
 ifpageexist (){
     # Check if a page exist
@@ -247,50 +235,38 @@ autoinstall (){
         ask "Which installer ?" ${list[@]}
     fi
     # Install
-    if [ "$REPLY" = "d" ]
-	then
-	    sudo apt install         "$2"
-	fi
-    if [ "$REPLY" = "s" ]
-    then
-	    sudo snap install        "$2"
-	fi
-    if [ "$REPLY" = "p" ]
-    then
-	    usesudo
-        $SUDO pip3 install             "$2"
-    fi
-	if [ "$REPLY" = "n" ]
-    then
-	    sudo npm install -g      "$2"
-	fi
-    if [ "$REPLY" = "a" ]
-    then
-	    apm install              "$2"
-	fi
-    if [ "$REPLY" = "v" ]
-    then
-	    code --install-extension "$2"
-	fi
-    if [ "$REPLY" = "y" ]
-    then
-	    usesudo
-        $SUDO yarn add                 "$2"
-	fi
-    if [ "$REPLY" = "r" ]
-    then
-	    sudo rpm --install            "$2"
-	fi
-    if [ "$REPLY" = "r" ]
-    then
-	    usesudo
-        $SUDO flatpak install          "$2"
-	fi
-    if [ "$REPLY" = "y" ]
-    then
-	    usesudo
-        $SUDO yarn add                 "$2"
-	fi
+    case $REPLY in
+        d)
+	        sudo apt install "$2"
+        ;;
+        s)
+	        sudo snap install "$2"
+        ;;
+        p)
+            usesudo
+            $SUDO pip3 install "$2"
+        ;;
+        n)
+	        sudo npm install -g "$2"
+        ;;
+        a)
+	        apm install "$2"
+        ;;
+        v)
+        	code --install-extension "$2"
+        ;;
+        y)
+	        usesudo
+            $SUDO yarn add    "$2"
+        ;;
+        r)
+	        sudo rpm --install "$2"
+        ;;
+        f)
+	        usesudo
+            $SUDO flatpak install "$2"
+        ;;
+    esac
 }
 install () {
     # read -p "Which installer ? [a(pt),s(nap),p(ip3),n(pm)] " -n 1
