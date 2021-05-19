@@ -52,11 +52,11 @@ ask (){
 }
 usesudo (){
     ask "Use sudo ?" "Yes" "No"
-    if [ "$REPLY" = "y"]
+    if [ "$REPLY" = "y" ]
     then
-        $SUDO="sudo "
+        SUDO="sudo "
     else
-        $SUDO=""
+        SUDO=""
     fi
 }
 update () {
@@ -71,7 +71,7 @@ search () {
     # Search packages
     aptitude search "$2"
     snap     search "$2"
-    pip3     search "$2"
+    # pip3     search "$2"
     npm      search "$2"
     apm      search "$2"
     flatpak  search "$2"
@@ -84,6 +84,7 @@ remove (){
     atom=1
     vscode=1
     yarn=1
+    gem=1
     dpkg-query -W --showformat='${Status}\n' $2 2> /dev/null |grep "install ok installed" > /dev/null || dpkg=0
     snap list              2> /dev/null | grep "$2 "  > /dev/null || snap=0
     pip3 freeze            2> /dev/null | grep "$2="  > /dev/null || pip3=0
@@ -91,6 +92,7 @@ remove (){
     apm list               2> /dev/null | grep " $2@" > /dev/null || atom=0
     code --list-extensions 2> /dev/null | grep $2     > /dev/null || vscode=0
     yarn --list            2> /dev/null | grep $2     > /dev/null || yarn=0
+    gem info $2            2> /dev/null | grep "$2 "  > /dev/null || gem=0
     # Add to list
     if [ $dpkg -eq 1 ]
 	then
@@ -118,7 +120,11 @@ remove (){
 	fi
     if [ $yarn -eq 1 ]
 	then
-	    list+=("vscode")
+	    list+=("yarn")
+	fi
+    if [ $gem -eq 1 ]
+	then
+	    list+=("gem")
 	fi
     echo ${list[@]}
     if [ ${#list[@]} -eq 1 ]
@@ -151,19 +157,21 @@ remove (){
 	        apm uninstall "$2"
         ;;
         v)
-        	code --uninstall-extension                 "$2"
+        	code --uninstall-extension "$2"
         ;;
         y)
 	        usesudo
-            $SUDO yarn remove    "$2"
+            $SUDO yarn remove "$2"
         ;;
         r)
-	        sudo rpm -e                                "$2"
+	        sudo rpm -e "$2"
         ;;
         f)
 	        usesudo
             $SUDO flatpak remove "$2"
         ;;
+        g)
+            sudo gem uninstall "$2"
     esac
 }
 ifpageexist (){
@@ -185,9 +193,11 @@ autoinstall (){
     atom=1
     vscode=1
     yarn=1
+    flatpak=0
+    gem=0
     list=()
     # Check if exist
-    if [[ $2 =~ "." ]]; then
+    if [[ "$2" =~ "." ]]; then
         flatpak=1
         ifpageexist https://flathub.org/apps/details/$2 || flatpak=0
     fi
@@ -197,6 +207,7 @@ autoinstall (){
     ifpageexist https://registry.npmjs.org/$2 || npm=0
     ifpageexist https://atom.io/packages/$2   || atom=0
     ifpageexist https://marketplace.visualstudio.com/items?itemName=$2 || vscode=0
+    ifpageexist https://rubygems.org/gems/$2
     # Add to list
     if [ $dpkg -eq 1 ]
 	then
@@ -221,6 +232,14 @@ autoinstall (){
     if [ $vscode -eq 1 ]
 	then
 	    list+=("vscode")
+	fi
+    if [ $flatpak -eq 1 ]
+	then
+	    list+=("flatpak")
+	fi
+    if [ $gem -eq 1 ]
+    then
+	    list+=("gem")
 	fi
     # Ask
     if [ ${#list[@]} -eq 1 ]
@@ -265,6 +284,9 @@ autoinstall (){
         f)
 	        usesudo
             $SUDO flatpak install "$2"
+        ;;
+        g)
+            sudo gem install "$2"
         ;;
     esac
 }
