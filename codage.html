@@ -1,95 +1,91 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset=utf-8 />
-  <title>Codage</title>
-  <link rel="icon" href="http://yaya.cout.free.fr/images/favicon.ico" />
-  <link rel="stylesheet" type="text/css" href="http://yaya.cout.free.fr/style.css">
+    <meta charset="utf-8" />
+    <title>Codage</title>
+    <link rel="icon" href="http://yaya.cout.free.fr/images/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://yaya.cout.free.fr/style.css">
 </head>
 
 <body>
 
-  <p><a href="http://yaya.cout.free.fr/">
-    <img src="http://yaya.cout.free.fr/images/Accueil%20Paysage%20Etoil%C3%A9%20Transparsent.png" alt="Accueil" name="Accueil" width="141" height="58" border="0" title="Cliquer pour voir l'accueil"/> 
-          </a></p>
-          
-<input min="0" max="26" id="nombre" type="number" placeholder="Saisissez votre décalage" value="1" step="1" />
-<input id="text" type="text" placeholder="Saisissez votre texte"/>
-<input type="button" value="Valider" onclick="valide();" />
+    <p>
+        <a href="http://yaya.cout.free.fr/">
+            <img src="http://yaya.cout.free.fr/images/Accueil%20Paysage%20Etoil%C3%A9%20Transparsent.png" alt="Accueil" name="Accueil" width="141" height="58" border="0" title="Cliquer pour voir l'accueil" />
+        </a>
+    </p>
 
+    <input min="0" max="26" id="nombre" type="number" placeholder="Saisissez votre décalage" value="1" step="1" />
+    <input id="text" type="text" placeholder="Saisissez votre texte" />
+    <input type="button" value="Valider" onclick="valide();" />
 
+    <script type="text/javascript">
+        function accents(str) {
 
+            var accents = "èéêëçàâäïîûùüôöóðÿŀ";
+            var replace = "eeeecaaaiiuuuooooyl";
+            for (loop in accents) {
+                str = str.replace(accents[loop], replace[loop]) + "";
+            }
+            for (loop in accents) {
+                str = str.replace(accents[loop].toUpperCase(), replace[loop].toUpperCase()) + "";
+            }
+            str = str.replace("æ", "oe");
+            str = str.replace("Æ", "oe");
 
+            return str;
+        }
+        var s2 = "";
+        var dico = new Map();
+        var inchanges = " .,!?;:/\\&\"'(-_#{[|`^@)]=}$£µ*%§<>²©↓¬€€þß«»~^¨ø&0123456789";
+        var alphabet = "abcdefghijklmnopqrstuvwxyz";
+        var secret = "";
 
+        function affichage(texte) {
+            // console.log(texte);
+            window.alert(texte);
+            // document.write(texte+"" \n");
+        };
 
+        function encoder(decalage, s) {
+            // s2 = s.normalize('NFD');
+            s2 = accents(s)
+            dico = new Map();
+            for (l in inchanges) {
+                dico.set(inchanges[l], inchanges[l]);
+            }
+            position = decalage
+            for (l in alphabet) {
+                if (position > 25) {
+                    position = 0;
+                }
+                dico.set(alphabet[l], alphabet[position]);
+                dico.set(alphabet[l].toUpperCase(), alphabet.toUpperCase()[position]);
+                if (position === -1) {
+                    dico.set("a", "z");
+                    dico.set("A", "Z");
+                }
+                position++;
+            }
+            // console.log(dico)
+            secret = "";
+            for (l in s2) {
+                // secret += dico.get(l);
+                lettre = s2[l]
+                secret += dico.get(lettre);
+                // secret += dico[l]
+            }
+            return secret;
+        }
 
-
-
-
-
-<script type="text/javascript">
-function accents(str){
-	
-	var accents = "èéêëçàâäïîûùüôöóðÿŀ";
-	var replace = "eeeecaaaiiuuuooooyl";
-	for (loop in accents){
-		str = str.replace(accents[loop],replace[loop])+"";
-	}
-	for (loop in accents){
-		str = str.replace(accents[loop].toUpperCase(),replace[loop].toUpperCase())+"";
-	}
-	str = str.replace("æ","oe");
-	str = str.replace("Æ","oe");
-	
-	return str;
-}
-var s2 = "";
-var dico = new Map();
-var inchanges = " .,!?;:/\\&\"'(-_#{[|`^@)]=}$£µ*%§<>²©↓¬€€þß«»~^¨ø&0123456789";
-var alphabet = "abcdefghijklmnopqrstuvwxyz";
-var secret = "";
-function affichage(texte){
-	// console.log(texte);
-	window.alert(texte);
-	// document.write(texte+"" \n");
-};
-
-function encoder(decalage,s){
-	// s2 = s.normalize('NFD');
-	s2 = accents(s)
-	dico = new Map();
-	for (l in inchanges){
-		dico.set(inchanges[l], inchanges[l]);
-	}
-	position = decalage
-	for (l in alphabet){
-		if (position > 25){
-			position = 0;
-		}
-		dico.set(alphabet[l], alphabet[position]);
-		dico.set(alphabet[l].toUpperCase(), alphabet.toUpperCase()[position]);
-		if (position === -1){
-			dico.set("a", "z");
-			dico.set("A", "Z");
-		}
-		position++;
-	}
-	// console.log(dico)
-	secret = "";
-	for (l in s2){
-		// secret += dico.get(l);
-		lettre = s2[l]
-		secret += dico.get(lettre);
-		// secret += dico[l]
-	}
-	return secret;
-}
-function valide(){
-	var decalage = document.getElementById("nombre").value;
-	var s = document.getElementById("text").value;
-	affichage("Plus grand : "+encoder(decalage,s));
-	affichage("Plus petit : "+encoder(decalage-decalage*2,s));
-}
-	</script>
+        function valide() {
+            var decalage = document.getElementById("nombre").value;
+            var s = document.getElementById("text").value;
+            affichage("Plus grand : " + encoder(decalage, s));
+            affichage("Plus petit : " + encoder(decalage - decalage * 2, s));
+        }
+    </script>
 </body>
+
 </html>
