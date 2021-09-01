@@ -43,9 +43,12 @@ ask (){
         do
             if [ $REPLY = $(echo $item | head -c 1) ]
             then
+                >&2 echo $item
                 echo $item
                 found=1
             fi
         done
     done
 }
+
+ask $@
