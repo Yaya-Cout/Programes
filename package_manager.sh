@@ -71,7 +71,8 @@ search () {
     # Search packages
     aptitude search "$2"
     snap     search "$2"
-    # pip3     search "$2"
+    #pip3     search "$2"
+    pip_search "$2"
     npm      search "$2"
     apm      search "$2"
     flatpak  search "$2"
